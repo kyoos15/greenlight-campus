@@ -14,7 +14,195 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ai_insights: {
+        Row: {
+          building_id: number | null
+          created_at: string | null
+          description: string
+          id: number
+          insight_type: string
+          potential_savings: number | null
+          priority: string
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          building_id?: number | null
+          created_at?: string | null
+          description: string
+          id?: number
+          insight_type: string
+          potential_savings?: number | null
+          priority: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          building_id?: number | null
+          created_at?: string | null
+          description?: string
+          id?: number
+          insight_type?: string
+          potential_savings?: number | null
+          priority?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      buildings: {
+        Row: {
+          building_id: number
+          created_at: string | null
+          floor_count: number | null
+          id: number
+          primary_use: string
+          site_id: number
+          square_feet: number
+          updated_at: string | null
+          year_built: number | null
+        }
+        Insert: {
+          building_id: number
+          created_at?: string | null
+          floor_count?: number | null
+          id?: number
+          primary_use: string
+          site_id: number
+          square_feet: number
+          updated_at?: string | null
+          year_built?: number | null
+        }
+        Update: {
+          building_id?: number
+          created_at?: string | null
+          floor_count?: number | null
+          id?: number
+          primary_use?: string
+          site_id?: number
+          square_feet?: number
+          updated_at?: string | null
+          year_built?: number | null
+        }
+        Relationships: []
+      }
+      energy_consumption: {
+        Row: {
+          anomaly_score: number | null
+          building_id: number
+          created_at: string | null
+          id: number
+          meter: number
+          meter_reading: number
+          predicted_reading: number | null
+          sustainability_score: number | null
+          timestamp: string
+          updated_at: string | null
+        }
+        Insert: {
+          anomaly_score?: number | null
+          building_id: number
+          created_at?: string | null
+          id?: number
+          meter: number
+          meter_reading: number
+          predicted_reading?: number | null
+          sustainability_score?: number | null
+          timestamp: string
+          updated_at?: string | null
+        }
+        Update: {
+          anomaly_score?: number | null
+          building_id?: number
+          created_at?: string | null
+          id?: number
+          meter?: number
+          meter_reading?: number
+          predicted_reading?: number | null
+          sustainability_score?: number | null
+          timestamp?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ml_predictions: {
+        Row: {
+          building_id: number
+          confidence_score: number | null
+          created_at: string | null
+          features: Json | null
+          id: number
+          model_version: string | null
+          predicted_consumption: number
+          prediction_date: string
+        }
+        Insert: {
+          building_id: number
+          confidence_score?: number | null
+          created_at?: string | null
+          features?: Json | null
+          id?: number
+          model_version?: string | null
+          predicted_consumption: number
+          prediction_date: string
+        }
+        Update: {
+          building_id?: number
+          confidence_score?: number | null
+          created_at?: string | null
+          features?: Json | null
+          id?: number
+          model_version?: string | null
+          predicted_consumption?: number
+          prediction_date?: string
+        }
+        Relationships: []
+      }
+      weather_data: {
+        Row: {
+          air_temperature: number | null
+          cloud_coverage: number | null
+          created_at: string | null
+          dew_temperature: number | null
+          id: number
+          precip_depth_1_hr: number | null
+          sea_level_pressure: number | null
+          site_id: number
+          timestamp: string
+          wind_direction: number | null
+          wind_speed: number | null
+        }
+        Insert: {
+          air_temperature?: number | null
+          cloud_coverage?: number | null
+          created_at?: string | null
+          dew_temperature?: number | null
+          id?: number
+          precip_depth_1_hr?: number | null
+          sea_level_pressure?: number | null
+          site_id: number
+          timestamp: string
+          wind_direction?: number | null
+          wind_speed?: number | null
+        }
+        Update: {
+          air_temperature?: number | null
+          cloud_coverage?: number | null
+          created_at?: string | null
+          dew_temperature?: number | null
+          id?: number
+          precip_depth_1_hr?: number | null
+          sea_level_pressure?: number | null
+          site_id?: number
+          timestamp?: string
+          wind_direction?: number | null
+          wind_speed?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
