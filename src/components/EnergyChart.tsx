@@ -1,17 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 
-interface ChartDataPoint {
-  time: string;
-  usage: number;
-  optimal: number;
-}
-
-interface EnergyChartProps {
-  data?: ChartDataPoint[];
-}
-
-const defaultData = [
+const data = [
   { time: "00:00", usage: 45, optimal: 40 },
   { time: "03:00", usage: 38, optimal: 35 },
   { time: "06:00", usage: 52, optimal: 48 },
@@ -22,8 +12,7 @@ const defaultData = [
   { time: "21:00", usage: 65, optimal: 60 },
 ];
 
-const EnergyChart = ({ data }: EnergyChartProps) => {
-  const chartData = data && data.length > 0 ? data : defaultData;
+const EnergyChart = () => {
   return (
     <Card>
       <CardHeader>
@@ -35,7 +24,7 @@ const EnergyChart = ({ data }: EnergyChartProps) => {
       
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={chartData}>
+          <AreaChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="time" 
