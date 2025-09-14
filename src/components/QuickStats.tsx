@@ -2,46 +2,56 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Leaf, TrendingDown, Target } from "lucide-react";
 
-const stats = [
-  {
-    icon: <Zap className="w-6 h-6" />,
-    label: "Total Campus Usage",
-    value: "847.2",
-    unit: "kWh",
-    change: "+5.2% from yesterday",
-    trend: "up",
-    color: "text-primary"
-  },
-  {
-    icon: <Leaf className="w-6 h-6" />,
-    label: "Carbon Footprint",
-    value: "423.1",
-    unit: "kg CO₂",
-    change: "-12% this week",
-    trend: "down",
-    color: "text-success"
-  },
-  {
-    icon: <TrendingDown className="w-6 h-6" />,
-    label: "Energy Savings",
-    value: "156.8",
-    unit: "kWh saved",
-    change: "vs last month",
-    trend: "down",
-    color: "text-success"
-  },
-  {
-    icon: <Target className="w-6 h-6" />,
-    label: "Efficiency Score",
-    value: "87",
-    unit: "/100",
-    change: "Campus average",
-    trend: "stable",
-    color: "text-accent"
-  }
-];
+interface DashboardStats {
+  totalUsage: number;
+  connectedBuildings: number;
+  avgSustainabilityScore: number;
+}
 
-const QuickStats = () => {
+interface QuickStatsProps {
+  data?: DashboardStats;
+}
+
+const QuickStats = ({ data }: QuickStatsProps) => {
+  const stats = [
+    {
+      icon: <Zap className="w-6 h-6" />,
+      label: "Total Campus Usage",
+      value: data ? data.totalUsage.toString() : "0",
+      unit: "kWh",
+      change: "+5.2% from yesterday",
+      trend: "up",
+      color: "text-primary"
+    },
+    {
+      icon: <Leaf className="w-6 h-6" />,
+      label: "Carbon Footprint",
+      value: data ? (data.totalUsage * 0.5).toFixed(1) : "0",
+      unit: "kg CO₂",
+      change: "-12% this week",
+      trend: "down",
+      color: "text-success"
+    },
+    {
+      icon: <TrendingDown className="w-6 h-6" />,
+      label: "Energy Savings",
+      value: data ? (data.totalUsage * 0.15).toFixed(1) : "0",
+      unit: "kWh saved",
+      change: "vs last month",
+      trend: "down",
+      color: "text-success"
+    },
+    {
+      icon: <Target className="w-6 h-6" />,
+      label: "Efficiency Score",
+      value: data ? data.avgSustainabilityScore.toString() : "0",
+      unit: "/100",
+      change: "Campus average",
+      trend: "stable",
+      color: "text-accent"
+    }
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((stat, index) => (

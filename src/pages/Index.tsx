@@ -4,42 +4,54 @@ import EnergyChart from "@/components/EnergyChart";
 import EnergyCard from "@/components/EnergyCard";
 import AIInsights from "@/components/AIInsights";
 import heroImage from "@/assets/dashboard-hero.jpg";
+import { useDashboardData } from "@/hooks/useDashboardData";
+import { Button } from "@/components/ui/button";
+import { RefreshCw, Database, Brain } from "lucide-react";
+import { toast } from "sonner";
 
 const Index = () => {
-  const buildings = [
-    {
-      building: "Academic Block A",
-      currentUsage: 124.5,
-      maxUsage: 150,
-      trend: "up" as const,
-      sustainabilityScore: 82,
-      status: "warning" as const
-    },
-    {
-      building: "Engineering Lab",
-      currentUsage: 89.2,
-      maxUsage: 120,
-      trend: "down" as const,
-      sustainabilityScore: 91,
-      status: "normal" as const
-    },
-    {
-      building: "Hostel Block C",
-      currentUsage: 156.8,
-      maxUsage: 200,
-      trend: "stable" as const,
-      sustainabilityScore: 95,
-      status: "normal" as const
-    },
-    {
-      building: "Admin Building",
-      currentUsage: 187.3,
-      maxUsage: 180,
-      trend: "up" as const,
-      sustainabilityScore: 67,
-      status: "critical" as const
-    }
-  ];
+  const { data, loading, error, refetch, seedData, runMLPredictions } = useDashboardData();
+
+  const handleSeedData = async () => {
+    toast.info("Seeding energy dataset...");
+    await seedData();
+    toast.success("Energy dataset seeded successfully!");
+  };
+
+  const handleRunML = async () => {
+    toast.info("Running ML predictions...");
+    await runMLPredictions();
+    toast.success("ML predictions completed!");
+  };
+
+  if (loading && !data) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <RefreshCw className="h-8 w-8 animate-spin mx-auto" />
+          <p className="text-muted-foreground">Loading dashboard data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !data) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <p className="text-destructive">Error: {error}</p>
+          <Button onClick={handleSeedData} className="mr-2">
+            <Database className="h-4 w-4 mr-2" />
+            Seed Sample Data
+          </Button>
+          <Button onClick={refetch} variant="outline">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,17 +76,54 @@ const Index = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3">
-                <span className="text-primary-foreground font-semibold">847.2 kWh</span>
+                <span className="text-primary-foreground font-semibold">
+                  {data?.stats.totalUsage || 0} kWh
+                </span>
                 <span className="text-primary-foreground/80 ml-2">Live Usage</span>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3">
-                <span className="text-primary-foreground font-semibold">12 Buildings</span>
+                <span className="text-primary-foreground font-semibold">
+                  {data?.stats.connectedBuildings || 0} Buildings
+                </span>
                 <span className="text-primary-foreground/80 ml-2">Connected</span>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3">
-                <span className="text-primary-foreground font-semibold">87/100</span>
+                <span className="text-primary-foreground font-semibold">
+                  {data?.stats.avgSustainabilityScore || 0}/100
+                </span>
                 <span className="text-primary-foreground/80 ml-2">Efficiency Score</span>
               </div>
+            </div>
+            
+            {/* Data Management Controls */}
+            <div className="flex flex-wrap gap-2 mt-6">
+              <Button 
+                onClick={handleSeedData} 
+                variant="secondary" 
+                size="sm"
+                className="bg-white/20 hover:bg-white/30 text-primary-foreground border-white/20"
+              >
+                <Database className="h-4 w-4 mr-2" />
+                Seed Data
+              </Button>
+              <Button 
+                onClick={handleRunML} 
+                variant="secondary" 
+                size="sm"
+                className="bg-white/20 hover:bg-white/30 text-primary-foreground border-white/20"
+              >
+                <Brain className="h-4 w-4 mr-2" />
+                Run ML Predictions
+              </Button>
+              <Button 
+                onClick={refetch} 
+                variant="secondary" 
+                size="sm"
+                className="bg-white/20 hover:bg-white/30 text-primary-foreground border-white/20"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Refresh
+              </Button>
             </div>
           </div>
         </div>
@@ -83,10 +132,10 @@ const Index = () => {
       {/* Main Dashboard */}
       <div className="container mx-auto px-6 py-8 space-y-8">
         {/* Quick Stats */}
-        <QuickStats />
+        <QuickStats data={data?.stats} />
 
         {/* Energy Chart */}
-        <EnergyChart />
+        <EnergyChart data={data?.chartData} />
 
         {/* Building Cards and AI Insights */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -96,14 +145,14 @@ const Index = () => {
               <p className="text-muted-foreground">Real-time monitoring and sustainability scores for all campus buildings</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {buildings.map((building, index) => (
+              {data?.buildings.map((building, index) => (
                 <EnergyCard key={index} {...building} />
               ))}
             </div>
           </div>
           
           <div className="lg:col-span-1">
-            <AIInsights />
+            <AIInsights insights={data?.insights} />
           </div>
         </div>
       </div>

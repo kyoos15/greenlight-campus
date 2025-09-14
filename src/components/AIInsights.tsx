@@ -3,37 +3,49 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Lightbulb, CheckCircle, AlertCircle, Clock } from "lucide-react";
 
-const insights = [
+interface InsightData {
+  id: number;
+  building_id?: number;
+  insight_type: string;
+  title: string;
+  description: string;
+  priority: string;
+  potential_savings?: number;
+}
+
+interface AIInsightsProps {
+  insights?: InsightData[];
+}
+
+const defaultInsights = [
   {
     id: 1,
-    type: "optimization",
+    insight_type: "optimization",
     title: "AC Optimization Opportunity",
     description: "Lecture Hall 2 AC running 15% above optimal temperature during low occupancy hours.",
     priority: "high",
-    savings: "12 kWh/day",
-    building: "Academic Block A"
+    potential_savings: 12,
   },
   {
     id: 2,
-    type: "alert",
+    insight_type: "alert",
     title: "Equipment Running Overnight",
     description: "Projector in Lab 3 has been running for 8 hours with no activity detected.",
     priority: "medium",
-    savings: "5 kWh/day",
-    building: "Engineering Lab"
+    potential_savings: 5,
   },
   {
     id: 3,
-    type: "success",
+    insight_type: "success",
     title: "Great Progress!",
     description: "Hostel Block C achieved 20% energy reduction this week compared to last month.",
     priority: "low",
-    savings: "45 kWh/week",
-    building: "Hostel Block C"
+    potential_savings: 45,
   }
 ];
 
-const AIInsights = () => {
+const AIInsights = ({ insights }: AIInsightsProps) => {
+  const displayInsights = insights && insights.length > 0 ? insights : defaultInsights;
   const getIcon = (type: string) => {
     switch (type) {
       case "optimization": return <Lightbulb className="w-4 h-4" />;
@@ -61,17 +73,16 @@ const AIInsights = () => {
       </CardHeader>
       
       <CardContent className="space-y-4">
-        {insights.map((insight) => (
+        {displayInsights.map((insight) => (
           <div key={insight.id} className="border border-border rounded-lg p-4 space-y-3">
             <div className="flex items-start justify-between">
               <div className="flex items-start space-x-3">
                 <div className="mt-1">
-                  {getIcon(insight.type)}
+                  {getIcon(insight.insight_type)}
                 </div>
                 <div className="flex-1">
                   <h4 className="font-medium text-foreground">{insight.title}</h4>
                   <p className="text-sm text-muted-foreground mt-1">{insight.description}</p>
-                  <p className="text-xs text-muted-foreground mt-2">{insight.building}</p>
                 </div>
               </div>
               <Badge className={getPriorityColor(insight.priority)}>
@@ -82,7 +93,7 @@ const AIInsights = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <span className="text-sm font-medium text-success">
-                  Potential Savings: {insight.savings}
+                  {insight.potential_savings ? `Potential Savings: $${insight.potential_savings}/month` : 'No savings estimate'}
                 </span>
               </div>
               <Button size="sm" variant="outline">
