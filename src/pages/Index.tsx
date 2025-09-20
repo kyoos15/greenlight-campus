@@ -3,9 +3,18 @@ import QuickStats from "@/components/QuickStats";
 import EnergyChart from "@/components/EnergyChart";
 import EnergyCard from "@/components/EnergyCard";
 import AIInsights from "@/components/AIInsights";
+import FeatureNavigation from "@/components/FeatureNavigation";
+import VoiceMessenger from "@/components/VoiceMessenger";
+import EnergyForecasting from "@/components/EnergyForecasting";
+import WaterManagement from "@/components/WaterManagement";
+import AirQualityMonitoring from "@/components/AirQualityMonitoring";
+import OccupancySensors from "@/components/OccupancySensors";
 import heroImage from "@/assets/dashboard-hero.jpg";
+import { useState } from "react";
 
 const Index = () => {
+  const [activeFeature, setActiveFeature] = useState("dashboard");
+  
   const buildings = [
     {
       building: "Academic Block A",
@@ -82,30 +91,60 @@ const Index = () => {
 
       {/* Main Dashboard */}
       <div className="container mx-auto px-6 py-8 space-y-8">
-        {/* Quick Stats */}
-        <QuickStats />
+        {/* Feature Navigation */}
+        <FeatureNavigation 
+          activeFeature={activeFeature}
+          onFeatureChange={setActiveFeature}
+        />
 
-        {/* Energy Chart */}
-        <EnergyChart />
+        {/* Render Different Features Based on Selection */}
+        {activeFeature === "dashboard" && (
+          <>
+            {/* Quick Stats */}
+            <QuickStats />
 
-        {/* Building Cards and AI Insights */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-foreground mb-2">Building Energy Status</h2>
-              <p className="text-muted-foreground">Real-time monitoring and sustainability scores for all campus buildings</p>
+            {/* Energy Chart */}
+            <EnergyChart />
+
+            {/* Building Cards and AI Insights */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-foreground mb-2">Building Energy Status</h2>
+                  <p className="text-muted-foreground">Real-time monitoring and sustainability scores for all campus buildings</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {buildings.map((building, index) => (
+                    <EnergyCard key={index} {...building} />
+                  ))}
+                </div>
+              </div>
+              
+              <div className="lg:col-span-1">
+                <AIInsights />
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {buildings.map((building, index) => (
-                <EnergyCard key={index} {...building} />
-              ))}
+          </>
+        )}
+
+        {activeFeature === "voice" && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <EnergyChart />
+            </div>
+            <div className="lg:col-span-1">
+              <VoiceMessenger />
             </div>
           </div>
-          
-          <div className="lg:col-span-1">
-            <AIInsights />
-          </div>
-        </div>
+        )}
+
+        {activeFeature === "forecasting" && <EnergyForecasting />}
+        
+        {activeFeature === "water" && <WaterManagement />}
+        
+        {activeFeature === "air" && <AirQualityMonitoring />}
+        
+        {activeFeature === "occupancy" && <OccupancySensors />}
       </div>
     </div>
   );
