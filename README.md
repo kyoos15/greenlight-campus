@@ -1,6 +1,6 @@
 
 
-GreenPulse Frontend is a React-based web application for visualizing environmental data. 
+GreenPulse Frontend is a React-based web application for visualising environmental data. 
 It provides interactive charts, dashboards, and real-time updates to help users monitor energy efficiency and sustainability metrics.
 
 ## Features
@@ -24,6 +24,6 @@ This project is built with:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/greenpulse-frontend.git
+   git clone https://github.com/kyoos15/greenlight-campus.git
 cd greenpulse-frontend
 
